@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guacamole
+  namespace: guacamole-mysql
+  labels:
+    app: guacamole
+    app.kubernetes.io/component: guacamole
+    app.kubernetes.io/instance: guacamole
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: guacamole
+  template:
+    metadata:
+      labels:
+        deployment: guacamole
+    spec:
+      containers:
+        - name: guacamole
+          image: guacamole/guacamole:1.6.0
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: GUACAMOLE_HOME
+              value: /tmp
+            - name: GUACD_HOSTNAME
+              value: guacamole-1.guacamole-mysql.svc.cluster.local
+            - name: GUACD_PORT
+              value: "4822"
+            - name: MYSQL_DATABASE
+              value: guacamole
+            - name: MYSQL_HOSTNAME
+              value: mysql.guacamole-mysql.svc.cluster.local
+            - name: MYSQL_PASSWORD
+              value: guacamole
+            - name: MYSQL_PORT
+              value: "3306"
+            - name: MYSQL_USER
+              value: guacamole
+            - name: LOG_LEVEL
+              value: debug
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+      restartPolicy: Always

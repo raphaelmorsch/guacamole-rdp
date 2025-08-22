@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: net-debug
+  namespace: guacamole-mysql
+  labels:
+    app: net-debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: net-debug
+  template:
+    metadata:
+      labels:
+        app: net-debug
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: net-debug
+          image: registry.access.redhat.com/ubi8/toolbox:latest
+          imagePullPolicy: Always
+          command: ["sleep", "infinity"]
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+          securityContext:
+            capabilities:
+              drop: ["MKNOD"]

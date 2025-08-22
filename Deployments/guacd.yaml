@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guacamole-1
+  namespace: guacamole-mysql
+  labels:
+    app: guacamole
+    app.kubernetes.io/component: guacamole
+    app.kubernetes.io/instance: guacamole
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: guacamole-1
+  template:
+    metadata:
+      labels:
+        deployment: guacamole-1
+    spec:
+      volumes:
+        - name: freerdp-config
+          emptyDir: {}
+      containers:
+        - name: guacamole-1
+          image: guacamole/guacd:1.6.0
+          ports:
+            - containerPort: 4822
+              protocol: TCP
+          env:
+            - name: HOME
+              value: /home/guac
+            - name: GUACD_HOSTNAME
+              value: 127.0.0.1
+            - name: GUACD_PORT
+              value: "4822"
+            - name: MYSQL_DATABASE
+              value: guacamole
+            - name: MYSQL_HOSTNAME
+              value: mysql.guacamole-mysql.svc.cluster.local
+            - name: MYSQL_PASSWORD
+              value: guacamole
+            - name: MYSQL_PORT
+              value: "3306"
+            - name: MYSQL_USER
+              value: guacamole
+            - name: LOG_LEVEL
+              value: debug
+          volumeMounts:
+            - name: freerdp-config
+              mountPath: /home/guac/.config/freerdp
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+      restartPolicy: Always
