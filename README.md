@@ -83,7 +83,7 @@ This solution was designed to demonstrate the viability of Guacamole as an alter
 ---
 
 ## 👨‍💻 Authors
-This repository was built and tested in collaboration with OpenShift solution architecture discussions, focusing on replacing Windows Jump Hosts with containerized access gateways.
+This repository was built and tested in collaboration with OpenShift solution architecture discussions, focusing on replacing Windows Jump Hosts with containerized access gateways. Lead by Raphael Morsch
 
 ---
 
