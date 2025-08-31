@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: net-debug
-  namespace: guacamole-mysql
+  namespace: guacamole
   labels:
     app: net-debug
 spec:

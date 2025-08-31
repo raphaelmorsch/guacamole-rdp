@@ -2,7 +2,7 @@ apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
   name: mysql
-  namespace: guacamole-mysql
+  namespace: guacamole
   labels:
     app.openshift.io/runtime: mysql-database
     template: mysql-persistent-template

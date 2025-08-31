@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: guacamole
-  namespace: guacamole-mysql
+  namespace: guacamole
   labels:
     app: guacamole
     app.kubernetes.io/component: guacamole
@@ -17,6 +17,19 @@ spec:
       labels:
         deployment: guacamole
     spec:
+      volumes:
+        - name: initdb
+          emptyDir: {}
+      initContainers:
+        - name: initdb
+          image: guacamole/guacamole:1.6.0
+          command: ['/bin/sh', '-c']
+          args:
+            - /opt/guacamole/bin/initdb.sh --mysql > /initdb/initdb.sql;
+          volumeMounts:
+            - name: initdb
+              mountPath: /initdb
+          imagePullPolicy: IfNotPresent
       containers:
         - name: guacamole
           image: guacamole/guacamole:1.6.0
@@ -27,13 +40,13 @@ spec:
             - name: GUACAMOLE_HOME
               value: /tmp
             - name: GUACD_HOSTNAME
-              value: guacamole-1.guacamole-mysql.svc.cluster.local
+              value: guacd.guacamole.svc.cluster.local
             - name: GUACD_PORT
               value: "4822"
             - name: MYSQL_DATABASE
               value: guacamole
             - name: MYSQL_HOSTNAME
-              value: mysql.guacamole-mysql.svc.cluster.local
+              value: mysql.guacamole.svc.cluster.local
             - name: MYSQL_PASSWORD
               value: guacamole
             - name: MYSQL_PORT
@@ -50,4 +63,7 @@ spec:
             limits:
               cpu: "500m"
               memory: "512Mi"
+          volumeMounts:
+            - name: initdb
+              mountPath: /initdb
       restartPolicy: Always
