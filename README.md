@@ -39,9 +39,18 @@ This solution was designed to demonstrate the viability of Guacamole as an alter
    ```
 
 2. Apply manifests:
-   ```bash
-   oc apply -f manifests/
-   ```
+  2.1. Apply PVCs
+    ```bash
+    oc apply -f Storage/
+    ```
+  2.2. Apply Secrets
+    ```bash
+    oc apply -f Secrets/
+    ```
+  2.3. Apply DeploymentConfig for MySQL
+    ```bash
+    oc apply -f DeploymentConfigs/
+    ```
 
 3. Expose the Guacamole route:
    ```bash
