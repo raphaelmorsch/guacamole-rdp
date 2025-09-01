@@ -39,7 +39,7 @@ This solution was designed to demonstrate the viability of Guacamole as an alter
    ```
 
 2. Apply manifests:
-  2.1. Apply PVCs
+2.1. Apply PVCs
     ```bash
     oc apply -f Storage/
     ```
