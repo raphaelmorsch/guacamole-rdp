@@ -33,31 +33,35 @@ This solution was designed to demonstrate the viability of Guacamole as an alter
 ## How to Deploy
 
 1. Clone this repository:
-   ```bash
-   git clone https://github.com/<your-org>/guacamole-openshift.git
-   cd guacamole-openshift
-   ```
+```bash
+git clone https://github.com/<your-org>/guacamole-openshift.git
+cd guacamole-openshift
+```
 
-2. Apply manifests:
-2.1. Apply PVCs
-    ```bash
-    oc apply -f Storage/
-    ```
-  2.2. Apply Secrets
-    ```bash
-    oc apply -f Secrets/
-    ```
-  2.3. Apply DeploymentConfig for MySQL
-    ```bash
-    oc apply -f DeploymentConfigs/
-    ```
+2. Apply PVCs:
+```bash
+oc apply -f Storage/
+```
+3. Apply Secrets
+```bash
+oc apply -f Secrets/
+```
+4. Apply DeploymentConfig for MySQL
+```bash
+oc apply -f DeploymentConfigs/
+```
 
-3. Expose the Guacamole route:
-   ```bash
-   oc get route guacamole -n guacamole
-   ```
+5. Apply Deployments
+```bash
+oc apply -f Deployments/
+```
 
-4. Access in the browser with the default credentials (or updated via ConfigMap).
+9. Expose the Guacamole route:
+```bash
+oc get route guacamole -n guacamole
+```
+
+10. Access in the browser with the default credentials (or updated via ConfigMap).
 
 ---
 
