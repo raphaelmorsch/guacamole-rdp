@@ -57,9 +57,9 @@ oc apply -f Deployments/
 ```
 
 9. Expose the Guacamole route:
-   ```bash
-   oc get route guacamole -n guacamole
-   ```
+```bash
+oc get route guacamole -n guacamole
+```
 
 10. Access in the browser with the default credentials (or updated via ConfigMap).
 
