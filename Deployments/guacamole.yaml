@@ -30,6 +30,35 @@ spec:
             - name: initdb
               mountPath: /initdb
           imagePullPolicy: IfNotPresent
+        - name: apply-initdb
+          image: mysql:8.0
+          command: ['/bin/sh', '-c']
+          args:
+            - until mysql -h $MYSQL_HOSTNAME -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE < /initdb/initdb.sql 2>/dev/null; do echo "Waiting for database connection..."; sleep 5; done;
+          env:
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: database-name
+            - name: MYSQL_HOSTNAME
+              value: mysql.guacamole.svc.cluster.local
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: database-password
+            - name: MYSQL_PORT
+              value: "3306"
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: database-user
+          volumeMounts:
+            - name: initdb
+              mountPath: /initdb
+          imagePullPolicy: IfNotPresent
       containers:
         - name: guacamole
           image: guacamole/guacamole:1.6.0
@@ -44,17 +73,26 @@ spec:
             - name: GUACD_PORT
               value: "4822"
             - name: MYSQL_DATABASE
-              value: guacamole
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: database-name
             - name: MYSQL_HOSTNAME
               value: mysql.guacamole.svc.cluster.local
             - name: MYSQL_PASSWORD
-              value: guacamole
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: database-password
             - name: MYSQL_PORT
               value: "3306"
             - name: MYSQL_USER
-              value: guacamole
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: database-user
             - name: LOG_LEVEL
-              value: debug
+              value: info
           imagePullPolicy: IfNotPresent
           resources:
             requests:
