@@ -32,19 +32,9 @@ spec:
           imagePullPolicy: IfNotPresent
         - name: apply-initdb
           image: mysql:8.0
-          command:
-            - /bin/sh
-            - -c
-            - |
-              echo "Checking if Guacamole DB schema is already initialized..."
-              if mysql -h $MYSQL_HOSTNAME -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE \
-                -e "SELECT 1 FROM guacamole_user LIMIT 1;" >/dev/null 2>&1; then
-                echo "Guacamole schema already present, skipping initialization."
-              else
-                echo "Initializing Guacamole schema..."
-                mysql -h $MYSQL_HOSTNAME -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE < /initdb/initdb.sql
-                echo "Guacamole schema initialization complete."
-              fi
+          command: ['/bin/sh', '-c']
+          args:
+            - until mysql -h $MYSQL_HOSTNAME -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE < /initdb/initdb.sql 2>/dev/null; do echo "Waiting for database connection..."; sleep 5; done;
           env:
             - name: MYSQL_DATABASE
               valueFrom:
